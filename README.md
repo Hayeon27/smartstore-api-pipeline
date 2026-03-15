@@ -60,6 +60,7 @@ CLIENT_SECRET=your_client_secret
 | **Test** | [🧪 통합 테스트 가이드](docs/testing.md) | `uv run python main.py` |
 | **Pipeline** | [🔄 수집 파이프라인 가이드](docs/pipeline.md) | `uv run python -m pipeline.runner` |
 | **Registration** | [📦 상품 등록/관리 가이드](docs/product_management.md) | `uv run python register_product_sample.py` |
+| **Safety** | [🛡️ 상품 등록 안전 가이드](docs/safety_guide.md) | **필독** - 테스트 상품 노출 방지 수칙 |
 | **Utility** | [🛠️ 유틸리티/디버그 가이드](docs/utilities.md) | `uv run python check_db.py` |
 
 ---

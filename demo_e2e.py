@@ -18,8 +18,8 @@ async def run_demo():
     client_secret = os.getenv("CLIENT_SECRET")
     
     async with NaverCommerceClient(client_id, client_secret) as client:
-        # STEP 1: 신규 테스트 상품 등록 (데모용)
-        product_name = f"데모 상품_{os.urandom(2).hex()}"
+        # STEP 1: 신규 테스트 상품 등록 (안전 모드: SUSPENSION)
+        product_name = f"데모 상품_안전_{os.urandom(2).hex()}"
         print(f"\n--- STEP 1: 신규 상품 등록 시도 ({product_name}) ---")
         
         # 주소록 조회
@@ -28,7 +28,7 @@ async def run_demo():
         
         product_data = {
             "originProduct": {
-                "statusType": "SALE",
+                "statusType": "SUSPENSION", # 판매 x
                 "saleType": "NEW",
                 "leafCategoryId": "50004002",
                 "name": product_name,
@@ -73,7 +73,7 @@ async def run_demo():
                     }
                 }
             },
-            "smartstoreChannelProduct": {"naverShoppingRegistration": True, "channelProductDisplayStatusType": "ON"}
+            "smartstoreChannelProduct": {"naverShoppingRegistration": False, "channelProductDisplayStatusType": "SUSPENSION"} # 전시 x
         }
         
         try:

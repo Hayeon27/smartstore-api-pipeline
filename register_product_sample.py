@@ -37,13 +37,13 @@ async def register_sample_product():
 
         print(f"👉 출고지ID: {release_id} | 반품지ID: {refund_id}")
 
-        # 2. 상품 등록 데이터 준비 (성공 사례인 product_debug.json 구조 완벽 반영)
+        # 2. 상품 등록 데이터 준비 (안전을 위해 기본상태: 중지)
         product_data = {
             "originProduct": {
-                "statusType": "SALE",
+                "statusType": "SUSPENSION", # 판매 x (판매중지) - 테스트 중 실구매 방지용
                 "saleType": "NEW",
                 "leafCategoryId": "50004002", # 양말 카테고리
-                "name": "API 테스트 등록 상품 (최종형)",
+                "name": "API 테스트 등록 상품 (안전모드)",
                 "detailContent": "<div class=\"se-viewer se-theme-default\" lang=\"ko-KR\"><div class=\"se-main-container\"><p>API를 통한 자동 등록 테스트입니다.</p></div></div>",
                 "images": {
                     "representativeImage": {
@@ -97,8 +97,8 @@ async def register_sample_product():
                 }
             },
             "smartstoreChannelProduct": {
-                "naverShoppingRegistration": True,
-                "channelProductDisplayStatusType": "ON"
+                "naverShoppingRegistration": False, # 전시 x
+                "channelProductDisplayStatusType": "SUSPENSION" # 전시 x (전시중지)
             }
         }
 
