@@ -51,11 +51,15 @@ def get_db_data():
             })
         stats_rows = demo_stats
 
-    # 3. 최근 상품 목록
-    cursor.execute("SELECT name, sale_price, status, representative_image_url FROM products ORDER BY updated_at DESC LIMIT 5")
+    # 3. 최근 상품 및 재고 상태
+    cursor.execute("SELECT name, sale_price, status, stock_quantity, representative_image_url FROM products ORDER BY updated_at DESC LIMIT 5")
     recent_products = cursor.fetchall()
 
-    # 4. 최근 문의
+    # 4. 실시간 주문 현황
+    cursor.execute("SELECT order_id, product_name, quantity, order_status, total_payment_amount, payment_date FROM orders ORDER BY payment_date DESC LIMIT 10")
+    realtime_orders = cursor.fetchall()
+
+    # 5. 최근 문의
     cursor.execute("SELECT inquiry_type, customer_name, content, is_answered FROM inquiries ORDER BY created_at DESC LIMIT 5")
     recent_inquiries = cursor.fetchall()
     
@@ -64,6 +68,7 @@ def get_db_data():
         "summary": summary,
         "stats": stats_rows,
         "products": recent_products,
+        "orders": realtime_orders,
         "inquiries": recent_inquiries
     }
 
@@ -75,6 +80,7 @@ async def dashboard(request: Request):
         "summary": data["summary"],
         "stats": data["stats"],
         "products": data["products"],
+        "orders": data["orders"],
         "inquiries": data["inquiries"]
     })
 

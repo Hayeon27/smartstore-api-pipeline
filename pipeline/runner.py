@@ -77,7 +77,26 @@ class PipelineRunner:
         except Exception as e:
             logger.error(f"Failed to process inquiries: {e}")
 
-        # 3. Statistics Extraction & Load
+        # 3. Orders Extraction & Load
+        try:
+            orders = await extractor.fetch_recent_orders(days=7)
+            if orders:
+                self.storage.upsert_orders(orders)
+                # 신규 주문 알림 발송
+                await self.notifier.notify_new_orders(orders)
+                logger.info(f"Successfully processed {len(orders)} orders.")
+        except Exception as e:
+            logger.error(f"Failed to process orders: {e}")
+
+        # 4. Logistics & SKU Sync
+        from pipeline.logistics_sync import LogisticsSync
+        try:
+            logistics = LogisticsSync(client, self.storage)
+            await logistics.sync_skus()
+        except Exception as e:
+            logger.error(f"Failed to sync logistics/SKU: {e}")
+
+        # 5. Statistics Extraction & Load
         try:
             stats = await extractor.fetch_daily_stats(days=7)
             self.storage.upsert_daily_stats(stats)

@@ -68,17 +68,54 @@
                 <canvas id="mainChart" height="150"></canvas>
             </div>
             <div class="card">
-                <h3 style="margin-bottom:15px;">신규 등록 상품</h3>
+                <h3 style="margin-bottom:15px;">상품 재고 및 상태</h3>
                 {% for p in products %}
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
                     <img src="{{ p.representative_image_url }}" class="image-thumb" onerror="this.src='https://via.placeholder.com/40'">
                     <div style="flex: 1; overflow: hidden;">
                         <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ p.name }}</div>
-                        <div style="font-size: 12px; color: var(--text-dim);">₩{{ "{:,}".format(p.sale_price) }}</div>
+                        <div style="font-size: 12px; color: var(--text-dim);">
+                            ₩{{ "{:,}".format(p.sale_price) }} | 
+                            <span style="{{ 'color: #f87171;' if p.stock_quantity < 10 else 'color: var(--success);' }}">재고: {{ p.stock_quantity }}</span>
+                        </div>
                     </div>
+                    <span class="status-badge" style="font-size: 10px;">{{ p.status }}</span>
                 </div>
                 {% endfor %}
             </div>
+        </div>
+
+        <div class="card" style="margin-top: 20px;">
+            <h3>실시간 주문 현황</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>주문번호</th>
+                        <th>상품명</th>
+                        <th>수량</th>
+                        <th>상태</th>
+                        <th>결제금액</th>
+                        <th>결제일시</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for o in orders %}
+                    <tr>
+                        <td style="font-family: monospace; font-size: 12px;">{{ o.order_id }}</td>
+                        <td style="font-weight: 600;">{{ o.product_name }}</td>
+                        <td>{{ o.quantity }}</td>
+                        <td><span class="status-badge" style="background: #1e293b; border: 1px solid var(--accent); color: var(--accent);">
+                            {{ o.order_status }}
+                        </span></td>
+                        <td>₩{{ "{:,}".format(o.total_payment_amount) }}</td>
+                        <td style="color: var(--text-dim); font-size: 12px;">{{ o.payment_date }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% if not orders %}
+                    <tr><td colspan="6" style="text-align: center; padding: 30px; color: var(--text-dim);">최근 주문 내역이 없습니다.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
         </div>
 
         <div class="card" style="margin-top: 20px;">

@@ -46,7 +46,7 @@ class Notifier:
         count = len(orders)
         msg = f"🎉 신규 주문이 {count}건 발생했습니다!\n"
         for o in orders[:5]: # 최대 5건만 상세 표시
-            msg += f"- 주문번호: {o.get('productOrderId')} | 금액: {o.get('paymentAmount')}원\n"
+            msg += f"- 주문번호: {o.get('productOrderId')} | 금액: {o.get('totalPaymentAmount', 0):,}원 | 상태: {o.get('orderStatus')}\n"
         
         if count > 5:
             msg += f"...외 {count-5}건 더 있음"

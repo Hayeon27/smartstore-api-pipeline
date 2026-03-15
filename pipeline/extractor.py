@@ -106,3 +106,46 @@ class DataExtractor:
                  logger.error(f"Failed to fetch stats for {date_str}: {e}")
         
         return stats_list
+
+    async def fetch_recent_orders(self, days: int = 7) -> List[Dict[str, Any]]:
+        """최근 N일간 상태가 변경된 주문 수집."""
+        logger.info(f"Fetching recent order status changes (last {days} days)...")
+        
+        # Naver API: last-changed-status-datetime 기준으로 조회
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=days)
+        
+        start_str = start_date.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+        
+        params = {
+            "lastChangedStatusDatetime": start_str,
+            # "moreSequence": "" # 필요시 시퀀스 토큰 사용
+        }
+        
+        try:
+            res = await self.client.orders.get_changed_product_orders(params)
+            data = res.get("data", {})
+            last_changed_statuses = data.get("lastChangedStatuses", [])
+            
+            if not last_changed_statuses:
+                logger.info("No recent order status changes found.")
+                return []
+            
+            # 상품 주문 번호들만 추출
+            p_order_ids = [item.get("productOrderId") for item in last_changed_statuses]
+            logger.info(f"Found {len(p_order_ids)} changed product orders. Fetching details...")
+            
+            # 상세 정보 일괄 조회 (query_product_orders)
+            # 최대 100건씩 끊어서 요청 (API 제한 대응)
+            detailed_orders = []
+            chunk_size = 100
+            for i in range(0, len(p_order_ids), chunk_size):
+                chunk = p_order_ids[i:i + chunk_size]
+                details = await self.client.orders.query_product_orders(chunk)
+                detailed_orders.extend(details)
+            
+            return detailed_orders
+            
+        except Exception as e:
+            logger.error(f"Failed to fetch recent orders: {e}")
+            return []

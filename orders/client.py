@@ -53,3 +53,9 @@ class OrdersClient:
         """
         data = {"delayDispatchProductOrders": delay_list}
         return await self.client.post("/v1/pay-order/seller/product-orders/delay-dispatch", json_data=data)
+
+    async def get_changed_product_orders(self, params: Dict[str, Any]) -> Dict[str, Any]:
+        """최근 상태가 변경된 상품 주문 목록 조회.
+        GET /v1/pay-order/seller/product-orders/last-changed-status
+        """
+        return await self.client.get("/v1/pay-order/seller/product-orders/last-changed-status", params=params)
