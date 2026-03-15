@@ -21,14 +21,11 @@
 ```text
 .
 ├── auth/            # 🔐 인증 (OAuth2, bcrypt Signature)
-├── seller/          # 👤 판매자 API (계정, 채널, JWE)
-├── products/        # 📦 상품 API (등록, 수정, 조회, 브랜드, 사이즈)
-├── orders/          # 🛒 주문 API (목록, 상세, 발주, 발송)
+├── seller/          # 👤 판매자 API (계정, 채널, 주소록)
+├── products/        # 📦 상품 API (등록, 수정, 조회, 브랜드)
+├── orders/          # 🛒 주문 API (목록, 상세, 발주)
 ├── inquiries/       # 💬 문의 API (고객 상담, 상품 Q&A)
-├── logistics/       # 🚚 물류 API (SKU 관리)
-├── settlement/      # 💰 정산 API (부가세, 수수료 내역)
-├── statistics/      # 📊 통계 API (채널별 일별/시간대 리포트)
-├── commerce/        # 🛠️ 솔루션 API (구독 관리)
+├── pipeline/        # 🔄 ETL 파이프라인 (Extractor, Storage)
 ├── client.py        # 🏗️ 메인 클라이언트 (NaverCommerceClient)
 └── main.py          # ⚡ 실행 예제 및 테스트
 ```
@@ -43,16 +40,13 @@
 
 ### 2. Installation
 ```bash
-# 저장소 클론
 git clone https://github.com/Hayeon27/smartstore-api-pipeline.git
 cd smartstore-api-pipeline
-
-# 의존성 설치 (uv 사용 시)
 uv sync
 ```
 
 ### 3. Environment Setup
-`.env` 파일을 생성하고 네이버 커머스 API 센터에서 발급받은 정보를 입력하세요.
+`.env` 파일을 생성하고 정보를 입력하세요.
 ```env
 CLIENT_ID=your_client_id
 CLIENT_SECRET=your_client_secret
@@ -60,34 +54,30 @@ CLIENT_SECRET=your_client_secret
 
 ---
 
+## 🚀 Quick Execution Guide
+
+본 레포지토리에 포함된 핵심 자동화 스크립트들입니다. 하이퍼링크를 클릭하시면 소스 코드를 확인하실 수 있습니다.
+
+| Category | Command | Description |
+| :--- | :--- | :--- |
+| **Test** | `uv run python main.py` | [연결성 테스트](main.py) - 전체 API 정상 동작 확인 |
+| **Pipeline** | `uv run python -m pipeline.runner` | [데이터 수집](pipeline/runner.py) - API 데이터를 로컬 DB로 적재 |
+| **Registration** | `uv run python register_product_sample.py` | [상품 등록](register_product_sample.py) - 신규 상품 가이드 |
+| **Management** | `uv run python register_suspended_product.py` | [중지 등록](register_suspended_product.py) - 전시/판매 중지 상품 등록 |
+| **Utility** | `uv run python check_db.py` | [DB 확인](check_db.py) - SQLite 적재 데이터 물리적 검증 |
+| **Debug** | `uv run python check_status.py` | [상태 체크](check_status.py) - 특정 상품의 상세 상태 대조 |
+
+---
+
 ## 💻 Usage Example
 
 ```python
-import asyncio
-import os
-from dotenv import load_dotenv
-from client import NaverCommerceClient
-
-load_dotenv()
-
-async def main():
-    async with NaverCommerceClient(
-        client_id=os.getenv("CLIENT_ID"),
-        client_secret=os.getenv("CLIENT_SECRET")
-    ) as client:
-        # 1. 판매자 계정 정보 조회
-        account = await client.seller.get_account()
-        print(f"Seller ID: {account['id']}")
-
-        # 2. 브랜드 조회
-        brands = await client.products.get_brands(name="나이키")
-        print(f"Found {len(brands)} brands.")
-
-        # 3. 주문 목록 조회 (최근 1개 예시)
-        # result = await client.orders.get_product_order_ids(order_id="...")
-
-if __name__ == "__main__":
-    asyncio.run(main())
+async with NaverCommerceClient(client_id, client_secret) as client:
+    # 예: 판매자 주소록 조회
+    address_books = await client.seller.get_address_books()
+    
+    # 예: 원상품 조회 (v2)
+    product = await client.products.get_origin_product("13195917377")
 ```
 
 ---
