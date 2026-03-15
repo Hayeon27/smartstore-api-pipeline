@@ -149,22 +149,3 @@ class ProductsClient:
         DELETE /v2/products/origin-products/{originProductNo}
         """
         return await self.client.delete(f"/v2/products/origin-products/{origin_product_no}")
-
-    # --- SKU ---
-    async def get_skus(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """SKU 목록 조회.
-        POST /v1/logistics/products/sellers/me/skus/query-paged-list
-        """
-        return await self.client.post("/v1/logistics/products/sellers/me/skus/query-paged-list", json_data=data)
-
-    async def get_sku(self, ns_id: str) -> Dict[str, Any]:
-        """SKU 상세 조회.
-        GET /v1/logistics/products/sellers/me/skus/{nsId}
-        """
-        return await self.client.get(f"/v1/logistics/products/sellers/me/skus/{ns_id}")
-
-    async def get_sku_linked_products(self, ns_id: str) -> List[Dict[str, Any]]:
-        """SKU 연결상품 조회.
-        GET /v1/logistics/products/sellers/me/skus/{nsId}/linked-products
-        """
-        return await self.client.get(f"/v1/logistics/products/sellers/me/skus/{ns_id}/linked-products")
