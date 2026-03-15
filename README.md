@@ -22,12 +22,11 @@
 .
 ├── auth/            # 🔐 인증 (OAuth2, bcrypt Signature)
 ├── seller/          # 👤 판매자 API (계정, 채널, 주소록)
-├── products/        # 📦 상품 API (등록, 수정, 조회, 브랜드)
-├── orders/          # 🛒 주문 API (목록, 상세, 발주)
-├── inquiries/       # 💬 문의 API (고객 상담, 상품 Q&A)
+├── products/        # 📦 상품 API (등록, 수정, 조회)
 ├── pipeline/        # 🔄 ETL 파이프라인 (Extractor, Storage)
-├── client.py        # 🏗️ 메인 클라이언트 (NaverCommerceClient)
-└── main.py          # ⚡ 실행 예제 및 테스트
+├── docs/            # 📖 사용 가이드 및 문서
+├── client.py        # 🏗️ 메인 클라이언트
+└── main.py          # ⚡ 실행 예제
 ```
 
 ---
@@ -41,12 +40,10 @@
 ### 2. Installation
 ```bash
 git clone https://github.com/Hayeon27/smartstore-api-pipeline.git
-cd smartstore-api-pipeline
 uv sync
 ```
 
 ### 3. Environment Setup
-`.env` 파일을 생성하고 정보를 입력하세요.
 ```env
 CLIENT_ID=your_client_id
 CLIENT_SECRET=your_client_secret
@@ -54,18 +51,16 @@ CLIENT_SECRET=your_client_secret
 
 ---
 
-## 🚀 Quick Execution Guide
+## 📖 Quick Execution Guide
 
-본 레포지토리에 포함된 핵심 자동화 스크립트들입니다. 하이퍼링크를 클릭하시면 소스 코드를 확인하실 수 있습니다.
+핵심 기능별 **가이드 문서**를 통해 사용법과 예시를 확인하세요.
 
-| Category | Command | Description |
+| Category | Quick Link | Command Example |
 | :--- | :--- | :--- |
-| **Test** | `uv run python main.py` | [연결성 테스트](main.py) - 전체 API 정상 동작 확인 |
-| **Pipeline** | `uv run python -m pipeline.runner` | [데이터 수집](pipeline/runner.py) - API 데이터를 로컬 DB로 적재 |
-| **Registration** | `uv run python register_product_sample.py` | [상품 등록](register_product_sample.py) - 신규 상품 가이드 |
-| **Management** | `uv run python register_suspended_product.py` | [중지 등록](register_suspended_product.py) - 전시/판매 중지 상품 등록 |
-| **Utility** | `uv run python check_db.py` | [DB 확인](check_db.py) - SQLite 적재 데이터 물리적 검증 |
-| **Debug** | `uv run python check_status.py` | [상태 체크](check_status.py) - 특정 상품의 상세 상태 대조 |
+| **Test** | [🧪 통합 테스트 가이드](docs/testing.md) | `uv run python main.py` |
+| **Pipeline** | [🔄 수집 파이프라인 가이드](docs/pipeline.md) | `uv run python -m pipeline.runner` |
+| **Registration** | [📦 상품 등록/관리 가이드](docs/product_management.md) | `uv run python register_product_sample.py` |
+| **Utility** | [🛠️ 유틸리티/디버그 가이드](docs/utilities.md) | `uv run python check_db.py` |
 
 ---
 
