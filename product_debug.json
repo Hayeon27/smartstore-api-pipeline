@@ -1,0 +1,94 @@
+{
+  "originProduct": {
+    "statusType": "SUSPENSION",
+    "saleType": "NEW",
+    "leafCategoryId": "50004002",
+    "name": "남자 양말",
+    "detailContent": "<div class=\"se-viewer se-theme-default\" lang=\"ko-KR\">\n    <!-- SE_DOC_HEADER_START -->\n    <!--@CONTENTS_HEADER-->\n    <!-- SE_DOC_HEADER_END -->\n    <div class=\"se-main-container\">\n                <div class=\"se-component se-text se-l-default\" id=\"SE-3840262d-94b9-4be0-a548-182ad964fe1e\">\n                    <div class=\"se-component-content\">\n                        <div class=\"se-section se-section-text se-l-default\">\n                            <div class=\"se-module se-module-text\">\n                                    <!-- SE-TEXT { --><p class=\"se-text-paragraph se-text-paragraph-align- \" style=\"\" id=\"SE-4655b08c-6cdd-4663-b61c-bf8f06d9a889\"><span style=\"\" class=\"se-fs- se-ff-   \" id=\"SE-97822903-1e65-4f7c-a28a-bb893172800c\">test 상품</span></p><!-- } SE-TEXT -->\n                            </div>\n                        </div>\n                    </div>\n                    <script type=\"text/data\" class=\"__se_module_data\" data-module-v2='{\"type\": \"v2_text\", \"id\": \"SE-3840262d-94b9-4be0-a548-182ad964fe1e\", \"data\": {\"ctype\": \"text\"  }}'></script>\n                </div>    </div>\n</div>\n",
+    "images": {
+      "representativeImage": {
+        "url": "https://shop-phinf.pstatic.net/20260315_125/1773576259685fOWHl_JPEG/107709135808871641_123963431.jpg"
+      },
+      "optionalImages": []
+    },
+    "salePrice": 1750,
+    "stockQuantity": 9999,
+    "deliveryInfo": {
+      "deliveryType": "DELIVERY",
+      "deliveryAttributeType": "NORMAL",
+      "deliveryCompany": "CJGLS",
+      "deliveryBundleGroupUsable": true,
+      "deliveryBundleGroupId": 57062002,
+      "deliveryFee": {
+        "deliveryFeeType": "FREE",
+        "baseFee": 0
+      },
+      "claimDeliveryInfo": {
+        "returnDeliveryCompanyPriorityType": "PRIMARY",
+        "returnDeliveryFee": 3000,
+        "exchangeDeliveryFee": 6000,
+        "shippingAddressId": 200058490,
+        "returnAddressId": 200058491,
+        "freeReturnInsuranceYn": false
+      },
+      "installationFee": false
+    },
+    "detailAttribute": {
+      "afterServiceInfo": {
+        "afterServiceTelephoneNumber": "01012345678",
+        "afterServiceGuideContent": "test"
+      },
+      "originAreaInfo": {
+        "originAreaCode": "00",
+        "content": "국산",
+        "plural": false
+      },
+      "optionInfo": {
+        "simpleOptionSortType": "CREATE",
+        "optionSimple": [],
+        "optionCustom": [],
+        "optionCombinationSortType": "CREATE",
+        "standardOptionGroups": [],
+        "optionStandards": [],
+        "useStockManagement": true,
+        "optionDeliveryAttributes": []
+      },
+      "purchaseReviewInfo": {
+        "purchaseReviewExposure": true
+      },
+      "taxType": "TAX",
+      "certificationTargetExcludeContent": {
+        "kcCertifiedProductExclusionYn": "TRUE"
+      },
+      "sellerCommentUsable": false,
+      "minorPurchasable": true,
+      "productInfoProvidedNotice": {
+        "productInfoProvidedNoticeType": "FASHION_ITEMS",
+        "fashionItems": {
+          "returnCostReason": "0",
+          "noRefundReason": "0",
+          "qualityAssuranceStandard": "0",
+          "compensationProcedure": "0",
+          "troubleShootingContents": "0",
+          "type": "양말",
+          "material": "면",
+          "size": "Free Size",
+          "manufacturer": "한국",
+          "caution": "test",
+          "warrantyPolicy": "test",
+          "afterServiceDirector": "01012345678"
+        }
+      },
+      "itselfProductionProductYn": false,
+      "seoInfo": {
+        "sellerTags": []
+      }
+    },
+    "customerBenefit": {}
+  },
+  "smartstoreChannelProduct": {
+    "storeKeepExclusiveProduct": false,
+    "naverShoppingRegistration": true,
+    "channelProductDisplayStatusType": "SUSPENSION"
+  }
+}
