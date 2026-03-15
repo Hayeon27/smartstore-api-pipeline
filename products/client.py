@@ -149,3 +149,13 @@ class ProductsClient:
         DELETE /v2/products/origin-products/{originProductNo}
         """
         return await self.client.delete(f"/v2/products/origin-products/{origin_product_no}")
+
+    # --- 상품 목록 (Product List) ---
+    async def search_products(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """상품 목록 조회.
+        POST /v1/products/search
+        """
+        # 필수 필드 searchKeywordType이 없을 경우 기본값 SELLER_CODE 설정 (목록 조회를 위해)
+        if "searchKeywordType" not in data:
+            data["searchKeywordType"] = "SELLER_CODE"
+        return await self.client.post("/v1/products/search", json_data=data)

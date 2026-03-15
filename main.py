@@ -107,6 +107,42 @@ async def main():
         except Exception as e:
             print(f"❌ 통계 리포트 조회 실패: {e} (권한 문제일 수 있음)")
 
+        # 8. 사용자 등록 테스트 상품 조회 및 상세 정보 테스트
+        print("\n🔍 사용자 등록 테스트 상품 조회 중 (POST /v1/products/search)...")
+        try:
+            # 최근 1개월 내 등록된 상품 검색 (기본 파라미터로 목록 조회)
+            search_data = {
+                "searchKeywordType": "SELLER_CODE",
+                "page": 1,
+                "size": 10
+            }
+            search_result = await client.products.search_products(search_data)
+            contents = search_result.get("contents", [])
+            print(f"🚀 상품 검색 성공! (검색된 상품 수: {len(contents)})")
+            
+            if contents:
+                test_product = contents[0]
+                p_no = test_product.get("originProductNo")
+                p_name = test_product.get("name")
+                print(f"👉 첫 번째 상품 발견: [{p_no}] {p_name}")
+                
+                # 상세 조회 테스트
+                print(f"🔍 상품 상세 조회 중 (GET /v2/products/origin-products/{p_no})...")
+                detail = await client.products.get_origin_product(str(p_no))
+                
+                # v2 스펙: 'originProduct' 안에 상세 정보 포함
+                product_data = detail.get("originProduct", {})
+                print(f"✅ 상세 조회 성공!")
+                print(f"   - 상품명: {product_data.get('name')}")
+                print(f"   - 판매가: {product_data.get('salePrice')}원")
+                print(f"   - 재고: {product_data.get('stockQuantity')}개")
+                print(f"   - 카테고리 ID: {product_data.get('categoryId')}")
+            else:
+                print("⚠️ 검색된 상품이 없습니다. 실제 상품이 등록되어 있는지 확인하세요.")
+                
+        except Exception as e:
+            print(f"❌ 테스트 상품 조회 실패: {e}")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
