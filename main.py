@@ -67,6 +67,26 @@ async def main():
         except Exception as e:
             print(f"❌ 채널 정보 조회 실패: {e}")
 
+        # 4. 상품 브랜드 조회
+        print("\n🔍 상품 브랜드 조회 중...")
+        try:
+            brands = await client.products.get_brands(name="나이키")
+            print("🚀 브랜드 조회 성공!")
+            print(f"결과 수: {len(brands)}")
+            if brands:
+                print(f"첫 번째 결과: {brands[0]}")
+        except Exception as e:
+            print(f"❌ 브랜드 조회 실패: {e}")
+
+        # 5. 사이즈 타입 조회
+        print("\n🔍 사이즈 타입 조회 중...")
+        try:
+            sizes = await client.products.get_size_types()
+            print("🚀 사이즈 타입 조회 성공!")
+            print(f"결과 수: {len(sizes)}")
+        except Exception as e:
+            print(f"❌ 사이즈 타입 조회 실패: {e}")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
