@@ -87,6 +87,26 @@ async def main():
         except Exception as e:
             print(f"❌ 사이즈 타입 조회 실패: {e}")
 
+        # 6. 상품 문의 조회 테스트 (간단 조회)
+        print("\n🔍 최근 상품 문의 조회 중...")
+        try:
+            inquiries = await client.inquiries.get_product_inquiries(params={"page": 1, "size": 5})
+            print("🚀 상품 문의 조회 성공!")
+            print(f"결과: {inquiries.get('contents', [])}")
+        except Exception as e:
+            print(f"❌ 상품 문의 조회 실패: {e}")
+
+        # 7. 일별 통계 리포트 조회 테스트
+        print("\n🔍 일별 통계 리포트 헤더 조회 중...")
+        try:
+            # 어제 날짜 기준으로 간단 테스트 (실제 데이터 유무에 따라 응답 다를 수 있음)
+            from datetime import datetime, timedelta
+            yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+            stats = await client.stats.get_all_channel_daily_report(params={"searchDate": yesterday})
+            print("🚀 통계 리포트 조회 요청 성공!")
+        except Exception as e:
+            print(f"❌ 통계 리포트 조회 실패: {e} (권한 문제일 수 있음)")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
