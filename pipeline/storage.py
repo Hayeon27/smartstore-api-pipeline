@@ -44,21 +44,36 @@ class StorageManager:
                     representative_image_url=excluded.representative_image_url,
                     updated_at=CURRENT_TIMESTAMP
             """
-            data = [
-                (
-                    p.get("originProductNo"),
-                    p.get("channelProductNo"),
-                    p.get("name"),
-                    p.get("statusType"),
-                    p.get("salePrice"),
-                    p.get("stockQuantity"),
-                    p.get("leafCategoryId"),
-                    p.get("representativeImageUrl"),
-                ) for p in products
-            ]
-            cursor.executemany(sql, data)
+            
+            flat_products = []
+            for item in products:
+                # v1/products/search 스펙 대응: originProductNo와 channelProducts 리스트가 있음
+                origin_no = item.get("originProductNo")
+                channels = item.get("channelProducts", [])
+                
+                if not channels:
+                    continue
+                
+                # 첫 번째 채널 정보를 대표로 저장
+                main_ch = channels[0]
+                flat_products.append((
+                    origin_no,
+                    main_ch.get("channelProductNo"),
+                    main_ch.get("name"),
+                    main_ch.get("statusType"),
+                    main_ch.get("salePrice"),
+                    main_ch.get("stockQuantity"),
+                    main_ch.get("leafCategoryId"),
+                    main_ch.get("representativeImage", {}).get("url") if isinstance(main_ch.get("representativeImage"), dict) else None
+                ))
+            
+            if not flat_products:
+                logger.warning("No products to upsert after flattening.")
+                return
+
+            cursor.executemany(sql, flat_products)
             conn.commit()
-            logger.info(f"Upserted {len(products)} products.")
+            logger.info(f"Upserted {len(flat_products)} products to database.")
 
     def upsert_orders(self, orders: List[Dict[str, Any]]):
         """주문 정보 저장 또는 업데이트 (Upsert)."""
