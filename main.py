@@ -90,9 +90,23 @@ async def main():
         # 6. 상품 문의 조회 테스트 (간단 조회)
         print("\n🔍 최근 상품 문의 조회 중...")
         try:
-            inquiries = await client.inquiries.get_product_inquiries(params={"page": 1, "size": 5})
+            from datetime import datetime, timedelta
+            to_date = datetime.now()
+            from_date = to_date - timedelta(days=7)
+            
+            # ISO 8601 with ms format
+            from_str = from_date.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+            to_str = to_date.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+            
+            params = {
+                "fromDate": from_str,
+                "toDate": to_str,
+                "page": 1, 
+                "size": 5
+            }
+            inquiries = await client.inquiries.get_product_inquiries(params=params)
             print("🚀 상품 문의 조회 성공!")
-            print(f"결과: {inquiries.get('contents', [])}")
+            print(f"결과 수: {len(inquiries.get('contents', []))}")
         except Exception as e:
             print(f"❌ 상품 문의 조회 실패: {e}")
 

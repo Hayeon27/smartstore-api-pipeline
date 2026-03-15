@@ -81,8 +81,8 @@ async def run_demo():
             origin_no = reg_res.get("originProductNo")
             print(f"✅ 상품 등록 성공! 원상품번호: {origin_no}")
             
-            print(f"⌛ 인덱싱을 위해 5초간 대기합니다...")
-            await asyncio.sleep(5)
+            print(f"⌛ 인덱싱을 위해 10초간 대기합니다...")
+            await asyncio.sleep(10)
         except Exception as e:
             print(f"❌ 상품 등록 실패 (중단): {e}")
             return
