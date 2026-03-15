@@ -8,9 +8,29 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 import uvicorn
+import sys
 from pathlib import Path
 
+# 루트 디렉토리를 sys.path에 추가하여 상위 모듈(client 등) 참조 허용
+sys.path.append(str(Path(__file__).parent.parent))
+
+from fastapi import FastAPI, Request, HTTPException, Body
+from fastapi.responses import HTMLResponse, JSONResponse
+from client import NaverCommerceClient
+import logging
+import asyncio
+
+# 로깅 설정
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 app = FastAPI(title="Smartstore Analytics Dashboard")
+
+# Naver API 클라이언트 초기화
+api_client = NaverCommerceClient(
+    client_id=os.getenv("CLIENT_ID"),
+    client_secret=os.getenv("CLIENT_SECRET")
+)
 
 # 템플릿 설정
 templates = Jinja2Templates(directory="templates")
@@ -52,7 +72,7 @@ def get_db_data():
         stats_rows = demo_stats
 
     # 3. 최근 상품 및 재고 상태
-    cursor.execute("SELECT name, sale_price, status, stock_quantity, representative_image_url FROM products ORDER BY updated_at DESC LIMIT 5")
+    cursor.execute("SELECT origin_product_no, name, sale_price, status, stock_quantity, representative_image_url FROM products ORDER BY updated_at DESC LIMIT 10")
     recent_products = cursor.fetchall()
 
     # 4. 실시간 주문 현황
@@ -83,6 +103,58 @@ async def dashboard(request: Request):
         "orders": data["orders"],
         "inquiries": data["inquiries"]
     })
+
+@app.post("/api/products")
+async def create_product(data: dict = Body(...)):
+    """새로운 상품 등록 (v2)."""
+    try:
+        # 데이터 정규화 (샘플 구조 기반)
+        # 실제로는 복잡한 JSON 구조가 필요하므로, 간단한 입력 필드에서 확장된 구조 생성
+        product_body = {
+            "originProduct": {
+                "name": data.get("name"),
+                "statusType": "SUSPENSION", # 안전을 위해 기본 중지
+                "salePrice": int(data.get("salePrice", 0)),
+                "stockQuantity": int(data.get("stockQuantity", 0)),
+                "leafCategoryId": data.get("categoryId", "50000000"), # 기본 카테고리
+                "detailContent": data.get("detailContent", "상품 상세 정보입니다."),
+                "images": {
+                    "representativeImage": {
+                        "url": data.get("imageUrl", "https://via.placeholder.com/500")
+                    }
+                }
+            }
+            # ... 기타 필수 필드는 client 내부 default 또는 확장이 필요할 수 있음
+        }
+        
+        # 실제 API 호출 (auth/token 자동 갱신 등은 Client 내부에서 처리됨)
+        # register_product_sample.py 의 로직을 간소화하여 반영
+        res = await api_client.products.create_product(product_body)
+        
+        # 등록 성공 시 DB 즉시 수집 유도 (또는 수동 추가)
+        return JSONResponse(content={"status": "success", "data": res})
+    except Exception as e:
+        logger.error(f"Product creation failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/api/products/{origin_no}")
+async def delete_product(origin_no: str):
+    """상품 삭제."""
+    try:
+        # 1. 실제 네이버 API 호출 (삭제 또는 판매중지 처리)
+        # 삭제 API (v2) 호출
+        await api_client.products.delete_product(origin_no)
+        
+        # 2. 로컬 DB 동기화 (삭제)
+        with sqlite3.connect(DB_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM products WHERE origin_product_no = ?", (origin_no,))
+            conn.commit()
+            
+        return {"status": "success", "message": f"Product {origin_no} deleted."}
+    except Exception as e:
+        logger.error(f"Product deletion failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
