@@ -19,6 +19,7 @@ from tenacity import (
 )
 
 from auth.token import NaverAuth
+from seller.client import SellerClient
 from exceptions import (
     NaverAPIError,
     AuthenticationError,
@@ -36,12 +37,16 @@ class NaverCommerceClient:
 
     사용법:
         async with NaverCommerceClient(client_id, client_secret) as client:
-            result = await client.get("/v1/seller")
+            # 판매자 정보 조회
+            account = await client.seller.get_account()
     """
 
     def __init__(self, client_id: str, client_secret: str):
         self.auth = NaverAuth(client_id, client_secret)
         self._http_client: httpx.AsyncClient | None = None
+        
+        # 서브 클라이언트 초기화
+        self.seller = SellerClient(self)
 
     async def __aenter__(self):
         self._http_client = httpx.AsyncClient(

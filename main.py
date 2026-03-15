@@ -45,9 +45,27 @@ async def main():
         return
 
     async with NaverCommerceClient(client_id, client_secret) as client:
-        # 토큰 발급 테스트
+        # 1. 토큰 발급 테스트 (내부적으로 수행됨)
         token = await client.auth.get_token()
-        print(f"토큰 발급 성공: {token[:20]}...")
+        print(f"✅ 토큰 발급 성공: {token[:20]}...")
+
+        # 2. 판매자 계정 정보 조회
+        print("\n🔍 판매자 계정 정보 조회 중...")
+        try:
+            account = await client.seller.get_account()
+            print("🚀 계정 정보 조회 성공!")
+            print(f"결과: {account}")
+        except Exception as e:
+            print(f"❌ 계정 정보 조회 실패: {e}")
+
+        # 3. 채널 정보 조회
+        print("\n🔍 채널 정보 조회 중...")
+        try:
+            channels = await client.seller.get_channels()
+            print("🚀 채널 정보 조회 성공!")
+            print(f"결과: {channels}")
+        except Exception as e:
+            print(f"❌ 채널 정보 조회 실패: {e}")
 
 
 if __name__ == "__main__":
