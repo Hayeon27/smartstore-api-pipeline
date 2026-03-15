@@ -18,7 +18,7 @@ from orders.client import OrdersClient
 from inquiries.client import InquiriesClient
 from logistics.client import LogisticsClient
 from settlement.client import SettlementClient
-from statistics.client import StatisticsClient
+from naver_stats.client import StatisticsClient
 from commerce.client import CommerceSolutionClient
 from exceptions import (
     NaverAPIError,

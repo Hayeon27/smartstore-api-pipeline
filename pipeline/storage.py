@@ -136,3 +136,29 @@ class StorageManager:
             cursor.executemany(sql, data)
             conn.commit()
             logger.info(f"Upserted {len(inquiries)} inquiries.")
+
+    def upsert_daily_stats(self, stats: List[Dict[str, Any]]):
+        """일별 통계 정보 저장 또는 업데이트 (Upsert)."""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            sql = """
+                INSERT INTO daily_stats (
+                    search_date, payment_amount, payment_count, visitor_count, updated_at
+                ) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(search_date) DO UPDATE SET
+                    payment_amount=excluded.payment_amount,
+                    payment_count=excluded.payment_count,
+                    visitor_count=excluded.visitor_count,
+                    updated_at=CURRENT_TIMESTAMP
+            """
+            data = [
+                (
+                    s.get("searchDate"),
+                    s.get("payAmt", 0),
+                    s.get("payCnt", 0),
+                    s.get("visitCnt", 0),
+                ) for s in stats
+            ]
+            cursor.executemany(sql, data)
+            conn.commit()
+            logger.info(f"Upserted {len(stats)} daily statistics records.")

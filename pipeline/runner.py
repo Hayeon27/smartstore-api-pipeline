@@ -3,11 +3,17 @@
 import asyncio
 import logging
 import os
+import sys
+from pathlib import Path
+
+# 루트 디렉토리를 sys.path에 추가하여 상위 모듈 참조 허용
+sys.path.append(str(Path(__file__).parent.parent))
+
 from dotenv import load_dotenv
 from client import NaverCommerceClient
-from .extractor import DataExtractor
-from .storage import StorageManager
-from .notifier import Notifier
+from pipeline.extractor import DataExtractor
+from pipeline.storage import StorageManager
+from pipeline.notifier import Notifier
 
 logging.basicConfig(
     level=logging.INFO,
@@ -71,8 +77,15 @@ class PipelineRunner:
         except Exception as e:
             logger.error(f"Failed to process inquiries: {e}")
 
-        # 3. Orders (추후 확장 가능)
-        # TODO: orders 에 대한 Fetch & Load & Notify 추가 가능
+        # 3. Statistics Extraction & Load
+        try:
+            stats = await extractor.fetch_daily_stats(days=7)
+            self.storage.upsert_daily_stats(stats)
+            logger.info(f"Successfully processed {len(stats)} days of statistics.")
+        except Exception as e:
+            logger.error(f"Failed to process statistics: {e}")
+
+        # 4. Orders (추후 확장 가능)
 
         logger.info("=== Pipeline Execution Finished ===")
 

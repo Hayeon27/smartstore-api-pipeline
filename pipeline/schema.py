@@ -42,5 +42,14 @@ SCHEMA = {
             created_at TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
+    """,
+    "daily_stats": """
+        CREATE TABLE IF NOT EXISTS daily_stats (
+            search_date TEXT PRIMARY KEY,
+            payment_amount INTEGER,
+            payment_count INTEGER,
+            visitor_count INTEGER,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
     """
 }

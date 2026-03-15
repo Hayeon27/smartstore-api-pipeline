@@ -88,3 +88,21 @@ class DataExtractor:
             logger.error(f"Failed to fetch product Q&As: {e}")
 
         return results
+
+    async def fetch_daily_stats(self, days: int = 7) -> List[Dict[str, Any]]:
+        """최근 N일간의 일별 통계 데이터 수집."""
+        logger.info(f"Fetching daily stats (last {days} days)...")
+        stats_list = []
+        
+        for i in range(1, days + 1): # 어제부터 과거 N일까지
+            date_str = (datetime.now() - timedelta(days=i)).strftime('%Y-%m-%d')
+            try:
+                res = await self.client.stats.get_all_channel_daily_report(params={"searchDate": date_str})
+                # 응답 구조 예시: {"searchDate": "2024-03-14", "payAmt": 1000, "payCnt": 5, "visitCnt": 100}
+                if res:
+                    stats_list.append(res)
+                    logger.debug(f"Fetched stats for {date_str}")
+            except Exception as e:
+                 logger.error(f"Failed to fetch stats for {date_str}: {e}")
+        
+        return stats_list
