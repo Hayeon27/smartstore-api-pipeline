@@ -67,3 +67,15 @@ class Notifier:
             msg += f"📦 상품 Q&A: {len(products)}건\n"
             
         await self.send_notification("💬 신규 문의 알림", msg, color="#2EB67D")
+
+    async def notify_new_products(self, products: List[Dict[str, Any]]):
+        """신규 상품 등록 수집 알림."""
+        if not products: return
+        
+        count = len(products)
+        msg = f"🆕 신규 상품 {count}건이 파이프라인에 수집되었습니다.\n"
+        for p in products[:3]:
+            origin_name = p.get('originProduct', {}).get('name', '알 수 없는 상품')
+            msg += f"- {origin_name} (ID: {p.get('originProductNo')})\n"
+            
+        await self.send_notification("📦 신규 상품 수집 알림", msg, color="#4385f4")

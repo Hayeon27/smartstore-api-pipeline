@@ -51,6 +51,10 @@ class PipelineRunner:
         try:
             products = await extractor.fetch_all_products()
             self.storage.upsert_products(products)
+            
+            # 신규 상품 알림 (예시: 이번 회차에 수집된 건 알림)
+            if products:
+                await self.notifier.notify_new_products(products)
         except Exception as e:
             logger.error(f"Failed to process products: {e}")
 
