@@ -1,0 +1,13 @@
+[project]
+name = "naver-smartstore-pipeline"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "bcrypt>=5.0.0",
+    "httpx>=0.28.1",
+    "pybase64>=1.4.3",
+    "python-dotenv>=1.2.2",
+    "tenacity>=9.1.4",
+]

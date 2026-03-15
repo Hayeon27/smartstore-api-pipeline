@@ -1,0 +1,5 @@
+httpx
+bcrypt
+pybase64
+python-dotenv
+tenacity
