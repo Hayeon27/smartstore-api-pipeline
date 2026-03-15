@@ -25,6 +25,8 @@ from orders.client import OrdersClient
 from inquiries.client import InquiriesClient
 from logistics.client import LogisticsClient
 from settlement.client import SettlementClient
+from statistics.client import StatisticsClient
+from commerce.client import CommerceSolutionClient
 from exceptions import (
     NaverAPIError,
     AuthenticationError,
@@ -57,6 +59,8 @@ class NaverCommerceClient:
         self.inquiries = InquiriesClient(self)
         self.logistics = LogisticsClient(self)
         self.settlement = SettlementClient(self)
+        self.stats = StatisticsClient(self)
+        self.solutions = CommerceSolutionClient(self)
 
     async def __aenter__(self):
         self._http_client = httpx.AsyncClient(

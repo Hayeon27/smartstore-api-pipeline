@@ -25,8 +25,13 @@ class SellerClient:
 
     async def get_channels(self) -> List[Dict[str, Any]]:
         """계정 하위의 채널 정보 조회.
-        
-        조회 대상 판매자 번호에 대한 인증 토큰이 필요합니다.
         GET /v1/seller/channels
         """
         return await self.client.get("/v1/seller/channels")
+
+    async def get_seller_info_by_token(self) -> Dict[str, Any]:
+        """판매자 인증 JWE 해석.
+        GET /v1/commerce-solutions/seller-info-by-token
+        """
+        # 참고: 경로는 commerce-solutions 아래에 있으나 판매자 정보 범주로 분류됨
+        return await self.client.get("/v1/commerce-solutions/seller-info-by-token")
