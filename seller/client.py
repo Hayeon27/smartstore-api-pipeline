@@ -35,3 +35,16 @@ class SellerClient:
         """
         # 참고: 경로는 commerce-solutions 아래에 있으나 판매자 정보 범주로 분류됨
         return await self.client.get("/v1/commerce-solutions/seller-info-by-token")
+
+    async def get_address_books(self, page: int = 1, size: int = 20) -> Dict[str, Any]:
+        """주소록 목록 조회.
+        GET /v1/seller/addressbooks-for-page
+        """
+        params = {"page": page, "size": size}
+        return await self.client.get("/v1/seller/addressbooks-for-page", params=params)
+
+    async def get_address_book(self, address_book_no: str) -> Dict[str, Any]:
+        """주소록 단건 조회.
+        GET /v1/seller/addressbooks/{addressBookNo}
+        """
+        return await self.client.get(f"/v1/seller/addressbooks/{address_book_no}")
